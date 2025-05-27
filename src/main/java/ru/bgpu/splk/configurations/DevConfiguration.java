@@ -9,8 +9,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.bgpu.splk.models.Group;
 import ru.bgpu.splk.models.User;
+import ru.bgpu.splk.models.Vote;
 import ru.bgpu.splk.services.GroupService;
 import ru.bgpu.splk.services.UserService;
+import ru.bgpu.splk.services.VoteService;
 
 import java.util.Collections;
 import java.util.Random;
@@ -21,9 +23,11 @@ public class DevConfiguration {
 
     @Autowired private UserService userService;
     @Autowired private GroupService groupService;
+    @Autowired private VoteService voteService;
 
     private String[] names ={"John", "Alex", "Stepan", "Anton", "Ivan"};
     private String[] surnames ={"Johnson", "Alexson", "Stepson"};
+    private String[] voteNames = {"Vote1", "Vote2", "Vote3", "Vote4"}; // Названия голосов
 
     @Bean
     public CommandLineRunner init() {
@@ -47,6 +51,13 @@ public class DevConfiguration {
             admin.setPassword(encoder.encode("admin"));
 
             userService.save(admin);
+
+            for (String voteName : voteNames) {
+                Vote vote = new Vote();
+                vote.setName(voteName);
+                vote.setCount(0);
+                voteService.save(vote);
+            }
         };
     }
 }
